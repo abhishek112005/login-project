@@ -6,7 +6,7 @@ function App() {
 // setEmail--> used for setting and clearing the email var value
 const [email,setEmail]=useState("");
 const [password,setPassword]=useState("");
-const handleLogin=(e)=>{
+const handleLogin= async (e)=>{
   e.preventDefault();
   console.log("btn-clicked");
   if(email && password){
@@ -16,11 +16,39 @@ const handleLogin=(e)=>{
   }else{
     alert("please enter mail and password!")
   }
+  // sending the mail and password to txt file
 
-  // clear the varaibales
+  try{
+    // write post req(as it is safe for this txt file)
+    const res= await fetch("http://localhost:5000/login",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+      },
+      body:JSON.stringify({email,password})
+    })
+
+    const data=await res.json();
+
+    if(!res.ok)
+    {
+      alert("something went wrong");
+      return;
+    }
+    alert("sucessfully sent to backend(txt file")
+      // clear the varaibales
   setEmail("");
   setPassword("");
   // window.location.reload();
+
+  }catch(err){
+    console.log(err);
+    alert("something went wrong");
+    return;
+    
+  }
+
+
   
 }
   return (
